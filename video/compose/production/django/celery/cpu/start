@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+export DJANGO_SETTINGS_MODULE=config.settings.production
+export NUMBA_CACHE_DIR=/tmp/numba_cache
+export MPLCONFIGDIR=/tmp/mplcache
+export TRANSFORMERS_CACHE=/tmp/transfomers
+export NLTK_DATA=/tmp/nltk_cache
+export C_FORCE_ROOT="true"
+
+
+exec celery -A config.celery_app worker -Q encoder_queue -l info --concurrency 1 -P threads --without-mingle --without-gossip --without-heartbeat
+

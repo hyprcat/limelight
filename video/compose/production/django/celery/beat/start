@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+export DJANGO_SETTINGS_MODULE=config.settings.production
+export NUMBA_CACHE_DIR=/tmp/numba_cache
+export MPLCONFIGDIR=/tmp/mplcache
+export TRANSFORMERS_CACHE=/tmp/transfomers
+export NLTK_DATA=/tmp/nltk_cache
+export C_FORCE_ROOT="true"
+
+exec celery -A config.celery_app worker -l info -B --scheduler django_celery_beat.schedulers:DatabaseScheduler 
+   

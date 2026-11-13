@@ -1,0 +1,110 @@
+volumes:
+  production_postgres_data: {}
+  production_postgres_data_backups: {}
+  production_traefik: {}
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./compose/production/django/Dockerfile
+    image: django-limelight-video
+    container_name: django-limelight-video
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ./.env
+    labels:  # new
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=vlan2'
+      - 'traefik.http.routers.django.tls=true'
+      - 'traefik.http.routers.django.service=django@docker'
+      - 'traefik.http.routers.django.rule=Host(`video.limelight.sh`)'
+      - 'traefik.http.routers.django.tls.certresolver=base'
+      - 'traefik.http.routers.django.entrypoints=https, http'
+      - 'traefik.http.services.django.loadbalancer.server.port=80'
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: limelight_video_production_postgres
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data
+      - production_postgres_data_backups:/backups
+    env_file:
+      - ./.env
+
+  traefik:
+    build:
+      context: .
+      dockerfile: ./compose/production/traefik/Dockerfile
+    image: traefik-limelight-video
+    container_name: traefik-limelight-video
+    depends_on:
+      - django
+    volumes:
+      - production_traefik:/etc/traefik/acme
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "traefik.enable=true"
+      - 'traefik.http.routers.api.rule=Host(`video.limelight.sh`)'
+      - 'traefik.http.routers.api.entrypoints=https'
+      - 'traefik.http.routers.api.service=api@internal'
+      - 'traefik.http.routers.api.middlewares=myAuth'
+      - 'traefik.http.services.justAdummyService.loadbalancer.server.port=1337'
+      - 'traefik.http.routers.api.tls'
+      - 'traefik.docker.network=vlan2'
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=route53
+      - 'traefik.http.routers.api.tls.certresolver=base'
+      - 'traefik.http.middlewares.myAuth.basicauth.users=admin:REPLACE_WITH_HTPASSWD_HASH'
+      - "traefik.http.middlewares.floc.headers.customresponseheaders.Permissions-Policy=interest-cohort=()"
+    ports:
+      - '80:80'
+      - '443:443'
+      - '5555:5555'
+
+  redis:
+    image: redis:6
+    container_name: redis-limelight-video
+  
+
+  celerycpu:
+    <<: *django
+    image: celerycpu-limelight-video
+    container_name: celerycpu-limelight-video
+    privileged: true
+    user: root
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: '28'
+    depends_on:
+      - redis
+      - postgres
+    ports: []
+    environment:
+      - NUMBA_CACHE_DIR:/tmp/numba_cache
+    command:  /start-cpu
+    restart: unless-stopped 
+
+
+  celerybeat:
+    <<: *django
+    image: celerybeat-limelight-video
+    container_name: celerybeat-limelight-video
+    privileged: true
+    user: root
+    depends_on:
+      - redis
+      - postgres
+    ports: []
+    environment:
+      NUMBA_CACHE_DIR: /tmp/numba_cache
+    command: /start-celerybeat
+    restart: unless-stopped 
+

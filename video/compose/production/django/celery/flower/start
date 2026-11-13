@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+
+
+export DJANGO_SETTINGS_MODULE=config.settings.production
+export NUMBA_CACHE_DIR=/tmp/numba_cache
+export MPLCONFIGDIR=/tmp/mplcache
+export TRANSFORMERS_CACHE=/tmp/transfomers
+export NLTK_DATA=/tmp/nltk_cache
+export C_FORCE_ROOT="true"
+
+exec celery \
+    -A config.celery_app \
+    -b "${CELERY_BROKER_URL}" \
+    flower \
+    --basic_auth="${CELERY_FLOWER_USER}:${CELERY_FLOWER_PASSWORD}"

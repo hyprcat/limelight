@@ -1,0 +1,100 @@
+volumes:
+  production_postgres_data: {}
+  production_postgres_data_backups: {}
+  production_traefik: {}
+  production_edis_data: {}
+
+
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./compose/production/django/Dockerfile
+    image: django-limelight-core
+    container_name: django-limelight-core
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ./.env
+    labels:  # new
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=vlan2'
+      - 'traefik.http.routers.django.tls=true'
+      - 'traefik.http.routers.django.service=django@docker'
+      - 'traefik.http.routers.django.rule=Host(`cloud.limelight.sh`)'
+      - 'traefik.http.routers.django.tls.certresolver=base'
+      - 'traefik.http.routers.django.entrypoints=https, http'
+      - 'traefik.http.services.django.loadbalancer.server.port=80'
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: postgres-limelight-core
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data
+      - production_postgres_data_backups:/backups
+    env_file:
+      - ./.env
+
+  traefik:
+    build:
+      context: .
+      dockerfile: ./compose/production/traefik/Dockerfile
+    image: traefik-limelight-core
+    container_name: traefik-limelight-core
+    depends_on:
+      - django
+    volumes:
+      - production_traefik:/etc/traefik/acme
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "traefik.enable=true"
+      - 'traefik.http.routers.api.rule=Host(`cloud.limelight.sh`)'
+      - 'traefik.http.routers.api.entrypoints=https'
+      - 'traefik.http.routers.api.service=api@internal'
+      - 'traefik.http.routers.api.middlewares=myAuth'
+      - 'traefik.http.services.justAdummyService.loadbalancer.server.port=1337'
+      - 'traefik.http.routers.api.tls'
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=route53
+      - 'traefik.docker.network=vlan2'
+      - 'traefik.http.routers.api.tls.certresolver=base'
+      - 'traefik.http.middlewares.myAuth.basicauth.users=admin:REPLACE_WITH_HTPASSWD_HASH'
+      - "traefik.http.middlewares.floc.headers.customresponseheaders.Permissions-Policy=interest-cohort=()"
+    ports:
+      - '80:80'
+      - '443:443'
+      - '5555:5555'
+
+  redis:
+    image: redis:6
+    container_name: redis-limelight-core
+
+  celeryworker:
+    <<: *django
+    image: celeryworker-limelight-core
+    container_name: celeryworker-limelight-core
+    depends_on:
+      - redis
+      - postgres
+    ports: []
+    command: /start-celeryworker
+
+  celerybeat:
+    <<: *django
+    image: celerybeat-limelight-core
+    container_name: celerybeat-limelight-core
+    depends_on:
+      - redis
+      - postgres
+    ports: []
+    command: /start-celerybeat
+
+  # flower:
+  #   <<: *django
+  #   image: flower-limelight-core
+  #   command: /start-flower

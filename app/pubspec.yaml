@@ -1,0 +1,81 @@
+name: lime_time_app
+description: LimeLight Social mobile app.
+version: 1.200.1+1
+
+environment:
+  sdk: '>=3.4.1 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  persistent_bottom_nav_bar: ^6.2.1
+  text_scroll: ^0.2.0
+  palette_generator: ^0.3.3+4
+  easy_stepper: ^0.8.5+1
+  flutter_animate: ^4.5.0
+  confetti: ^0.7.0
+  smooth_scroll_multiplatform: ^1.0.8
+  file_picker: ^8.0.7
+  google_fonts: ^6.2.1
+  bloc: ^8.1.4
+  flutter_bloc: ^8.1.6
+  readmore: ^3.0.0
+  upgrader: ^10.3.0
+  google_sign_in: ^6.2.1
+  geolocator: ^12.0.0
+  geocoding: ^3.0.0
+  email_validator: ^3.0.0
+  cached_network_image: ^3.4.0
+  toggle_switch: ^2.3.0
+  loading_indicator: ^3.1.1
+  showcaseview: ^3.0.0
+  flutter_secure_storage: ^9.2.2
+  hive: ^2.2.3
+  url_launcher: ^6.3.0
+  shimmer: ^3.0.0
+  step_progress_indicator: ^1.0.2
+  better_player: ^0.0.84
+  icons_plus: ^5.0.0
+  hive_flutter: ^1.1.0
+  custom_refresh_indicator: ^4.0.1
+  intl: ^0.19.0
+  app_links: ^6.1.4
+  is_first_run: ^1.0.0
+  flutter_displaymode: ^0.6.0
+  chunked_uploader: ^1.1.0
+  wakelock_plus: ^1.2.7
+  dio: ^5.5.0+1
+  cupertino_icons: ^1.0.8
+  firebase_auth: ^5.1.4
+  firebase_core: ^3.3.0
+  firebase_analytics: ^11.2.1
+  introduction_screen: ^3.1.14
+  dots_indicator: ^2.1.2
+  hive_generator: ^2.0.1
+  random_avatar: ^0.0.8
+  firebase_messaging: ^15.0.4
+  device_info_plus: ^10.1.1
+  video_player: ^2.9.1
+  auto_size_text: ^3.0.0
+  flutter_local_notifications: ^17.2.1+2
+  super_cupertino_navigation_bar: ^2.1.2
+  flutter_staggered_grid_view: ^0.7.0
+  flutter_native_splash: ^2.4.1
+  sign_in_with_apple: ^6.1.2
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.12
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+
+  # The UI used the Gilroy typeface as font family 'Gil'. Gilroy is a
+  # commercial font and is not included. See README.md to add your own copy.

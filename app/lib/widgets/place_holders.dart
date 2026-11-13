@@ -1,0 +1,275 @@
+import 'package:flutter/material.dart';
+
+class BannerPlaceholder extends StatelessWidget {
+  const BannerPlaceholder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 200.0,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class TitlePlaceholder extends StatelessWidget {
+  final double width;
+
+  const TitlePlaceholder({
+    super.key,
+    required this.width,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: width,
+            height: 12.0,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 8.0),
+          Container(
+            width: width,
+            height: 12.0,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 8.0),
+          Container(
+            width: width,
+            height: 12.0,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 8.0),
+          Container(
+            width: width,
+            height: 12.0,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 8.0),
+          Container(
+            width: width,
+            height: 12.0,
+            color: Colors.white,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+enum ContentLineType {
+  twoLines,
+  threeLines,
+  sevenLines,
+}
+
+class ContentPlaceholder extends StatelessWidget {
+  final ContentLineType lineType;
+
+  const ContentPlaceholder({
+    super.key,
+    required this.lineType,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const CircleAvatar(
+            radius: 20,
+          ),
+          const SizedBox(width: 12.0),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 10.0,
+                  color: Colors.white,
+                  margin: const EdgeInsets.only(bottom: 8.0),
+                ),
+                if (lineType == ContentLineType.threeLines)
+                  Container(
+                    width: double.infinity,
+                    height: 10.0,
+                    color: Colors.white,
+                    margin: const EdgeInsets.only(bottom: 8.0),
+                  ),
+                if (lineType == ContentLineType.sevenLines)
+                  ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: double.infinity,
+                          height: 10.0,
+                          color: Colors.white,
+                          margin: const EdgeInsets.only(bottom: 8.0),
+                        );
+                      }),
+                Container(
+                  width: 200.0,
+                  height: 10.0,
+                  color: Colors.white,
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ContentPlaceholder2 extends StatelessWidget {
+  final ContentLineType lineType;
+
+  const ContentPlaceholder2({
+    super.key,
+    required this.lineType,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          ),
+          const SizedBox(width: 12.0),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 10.0,
+                  color: Colors.white,
+                  margin: const EdgeInsets.only(bottom: 8.0),
+                ),
+                if (lineType == ContentLineType.threeLines)
+                  Container(
+                    width: double.infinity,
+                    height: 10.0,
+                    color: Colors.white,
+                    margin: const EdgeInsets.only(bottom: 8.0),
+                  ),
+                if (lineType == ContentLineType.sevenLines)
+                  ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: double.infinity,
+                          height: 10.0,
+                          color: Colors.white,
+                          margin: const EdgeInsets.only(bottom: 8.0),
+                        );
+                      }),
+                Container(
+                  width: 100.0,
+                  height: 10.0,
+                  color: Colors.white,
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class RectPlaceholder extends StatelessWidget {
+  final ContentLineType lineType;
+
+  const RectPlaceholder({
+    super.key,
+    required this.lineType,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 72.0,
+            height: 72.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(70.0),
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 12.0),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 150.0,
+                  height: 10.0,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Container(
+                  width: 100.0,
+                  height: 10.0,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 10.0,
+                  color: Colors.white,
+                  margin: const EdgeInsets.only(bottom: 8.0),
+                ),
+                if (lineType == ContentLineType.threeLines)
+                  Container(
+                    width: double.infinity,
+                    height: 10.0,
+                    color: Colors.white,
+                    margin: const EdgeInsets.only(bottom: 8.0),
+                  ),
+                Container(
+                  width: double.infinity,
+                  height: 10.0,
+                  color: Colors.white,
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
